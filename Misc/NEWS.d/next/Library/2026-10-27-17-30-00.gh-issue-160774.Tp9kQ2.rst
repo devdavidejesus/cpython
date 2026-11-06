@@ -1,0 +1,5 @@
+Reading a sparse member of a tar archive with
+:meth:`TarFile.extractfile(member).read() <tarfile.TarFile.extractfile>` no
+longer takes time proportional to the member size times the number of sparse
+segments.  The result is now assembled with :meth:`bytes.join` instead of
+repeated concatenation.

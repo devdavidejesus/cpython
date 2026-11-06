@@ -738,7 +738,7 @@ class _FileInFile(object):
         else:
             size = min(size, self.size - self.position)
 
-        buf = b""
+        chunks = []
         while size > 0:
             while True:
                 data, start, stop, offset = self.map[self.map_index]
@@ -757,12 +757,12 @@ class _FileInFile(object):
                     raise ReadError(f"invalid compressed data: {e}") from e
                 if len(b) != length:
                     raise ReadError("unexpected end of data")
-                buf += b
+                chunks.append(b)
             else:
-                buf += NUL * length
+                chunks.append(NUL * length)
             size -= length
             self.position += length
-        return buf
+        return b"".join(chunks)
 
     def readinto(self, b):
         buf = self.read(len(b))
